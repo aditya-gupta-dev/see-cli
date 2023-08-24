@@ -57,10 +57,10 @@ Future<bool> isEqualContentInFile(File first, File second) async {
   String firstName = path.basename(first.path);
 
   if (contentInFirstFile == contentInSecondFile) {
-    print("content of both $firstName are equal");
+    print("content of both $firstName is equal");
     return true;
   } else {
-    print("content of both $firstName is not equal");
+    print("content of both $firstName is not equal\n");
     return false;
   }
 }

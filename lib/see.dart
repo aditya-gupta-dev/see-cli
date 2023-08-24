@@ -31,26 +31,37 @@ Future compareDirectories(List<File> first, List<File> second) async {
   bool result = await isInitialNamesEqual(first, second);
   if (result) {
     print("Both had identical file names");
-    List<Future<void>> futures = [];
+    List<Future<bool>> futures = [];
     for (int i = 0; i < first.length; i++) {
       futures.add(isEqualContentInFile(first[i], second[i]));
     }
-    await Future.wait(futures);
+    List<bool> results = await Future.wait(futures);
+
+    bool areAllFilesEqual = true;
+    for (bool result in results) {
+      if (!result) {
+        areAllFilesEqual = false;
+      }
+    }
+
+    if (areAllFilesEqual) {
+      print("Both Directories were identical");
+    }
   }
 }
 
-Future<void> isEqualContentInFile(File first, File second) async {
+Future<bool> isEqualContentInFile(File first, File second) async {
   String contentInFirstFile = await first.readAsString();
   String contentInSecondFile = await second.readAsString();
 
   String firstName = path.basename(first.path);
-  String secondName = path.basename(second.path);
 
   if (contentInFirstFile == contentInSecondFile) {
     print("content of both $firstName are equal");
+    return true;
   } else {
     print("content of both $firstName is not equal");
-    return;
+    return false;
   }
 }
 

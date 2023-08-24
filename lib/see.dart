@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:path/path.dart' as path;
 
-List<File> listFiles(Directory dir) {
+Future<List<File>> listFiles(Directory dir) async {
+  await Future.delayed(Duration(seconds: 2));
   List<File> fileList = [];
 
   dir.listSync(recursive: true).forEach((FileSystemEntity entity) {
@@ -8,7 +10,6 @@ List<File> listFiles(Directory dir) {
       fileList.add(entity);
     }
   });
-
   return fileList;
 }
 
@@ -24,4 +25,47 @@ List<Directory> getOnlyTwoDirectories(Directory directory) {
     return directories.getRange(0, 2).toList();
   }
   return [];
+}
+
+Future compareDirectories(List<File> first, List<File> second) async {
+  bool result = await isInitialNamesEqual(first, second);
+  if (result) {
+    print("Both had identical file names");
+    List<Future<void>> futures = [];
+    for (int i = 0; i < first.length; i++) {
+      futures.add(isEqualContentInFile(first[i], second[i]));
+    }
+    await Future.wait(futures);
+  }
+}
+
+Future<void> isEqualContentInFile(File first, File second) async {
+  String contentInFirstFile = await first.readAsString();
+  String contentInSecondFile = await second.readAsString();
+
+  String firstName = path.basename(first.path);
+  String secondName = path.basename(second.path);
+
+  if (contentInFirstFile == contentInSecondFile) {
+    print("content of both $firstName are equal");
+  } else {
+    print("content of both $firstName is not equal");
+    return;
+  }
+}
+
+bool isEqualNumberOfFiles(List<File> first, List<File> second) {
+  return first.length == second.length;
+}
+
+Future<bool> isInitialNamesEqual(List<File> first, List<File> second) async {
+  for (int i = 0; i < first.length; i++) {
+    String firstname = path.basename(first[i].path);
+    String secondname = path.basename(second[i].path);
+    if (firstname != secondname) {
+      print("$firstname is not equal to $secondname");
+      return false;
+    }
+  }
+  return true;
 }

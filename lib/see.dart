@@ -20,5 +20,8 @@ List<Directory> getOnlyTwoDirectories(Directory directory) {
       directories.add(entity);
     }
   }
-  return directories.getRange(0, 2).toList();
+  if (directories.length >= 2) {
+    return directories.getRange(0, 2).toList();
+  }
+  return [];
 }

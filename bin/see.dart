@@ -3,9 +3,7 @@ import 'package:see/see.dart';
 import 'package:path/path.dart';
 
 void main(List<String> args) async {
-  String path = "H:\\darting\\remo";
-
-  List<Directory> directories = getOnlyTwoDirectories(Directory(path));
+  List<Directory> directories = getOnlyTwoDirectories(Directory.current);
   if (directories.isEmpty) {
     print("You need to have atleast two directories...");
     return;

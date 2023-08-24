@@ -16,12 +16,9 @@ List<Directory> getOnlyTwoDirectories(Directory directory) {
   List<Directory> directories = [];
   List<FileSystemEntity> entities = directory.listSync();
   for (FileSystemEntity entity in entities) {
-    if (directories.length == 2) {
-      return directories;
-    }
     if (entity is Directory) {
       directories.add(entity);
     }
   }
-  return directories;
+  return directories.getRange(0, 2).toList();
 }
